@@ -12,32 +12,43 @@ services:
       - "443:443"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./cert/:/var/eets/test/proxy-conf/cert/
+      - ./cert:/var/eets/test/proxy-conf/cert
+    depends_on:
+      - "eets-provider-interface-service"
   eets-testcontainer-messagebroker:
     image: rabbitmq:3.7.6-management
+    container_name: eets-testcontainer-rabbitmq
     ports:
       - "15672:15672"
       - "5672:5672"
     volumes:
       - rabbit-data:/var/lib/rabbitmq
+  eets-testcontainer-mariadb:
+    image: mariadb
+    container_name: eets-testcontainer-mariadb
+    ports:
+      - "3320:3306"
+    volumes:
+      - db-data:/var/lib/mysql
     environment:
       - MYSQL_USER=eets
       - MYSQL_PASSWORD=secret
       - MYSQL_DATABASE=db-testsupport
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
-  eets-testcontainer-mariadb:
-    image: mariadb
-    ports:
-      - "3306:3306"
-    volumes:
-      - db-data:/var/lib/mysql
   eets-testcontainer-testsupportservice:
     build: ./eets-testsupport-service
+    container_name: eets-testcontainer-testsupportservice
     ports:
       - "8096:8096"
     volumes:
-      - testsupport-data:/var/eets/test/service-conf
+      - ./provider.properties:/var/eets/test/service-conf/provider.properties
+    depends_on:
+      - "eets-testcontainer-mariadb"
+      - "eets-testcontainer-messagebroker"
   eets-provider-interface-service:
     build: ./eets-providerinterface-service
+    container_name: eets-provider-interface-service
     ports:
       - "8089:8089"
+    depends_on:
+      - "eets-testcontainer-testsupportservice"
