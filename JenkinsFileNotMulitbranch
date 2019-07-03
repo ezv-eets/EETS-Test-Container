@@ -35,7 +35,7 @@ pipeline {
                         def jdk = docker.image('bit/openjdk:8-jdk')
                         jdk.pull()
                         jdk.inside('-u root') {
-                             sh "sh mvnw dependency:get -DgroupId=ch.admin.ezv.eets -DartifactId=eets-provider-interface-service -Dversion=0.17.0-8  -Ddest=eets-provider-interface-service/eets-provider-interface-service.jar"
+//                             sh "sh mvnw dependency:get -DgroupId=ch.admin.ezv.eets -DartifactId=eets-provider-interface-service -Dversion=0.17.0-8  -Ddest=eets-provider-interface-service/eets-provider-interface-service.jar"
 //                             sh "sh mvnw dependency:get -DgroupId=ch.admin.ezv.eets -DartifactId=eets-test-support-service -Ddest=eets-test-support-service/eets-test-support-service.jar"
 
                         }
@@ -55,7 +55,7 @@ pipeline {
                         sh "git config --get remote.origin.url"
                         sh "git add *"
                         sh "git commit -m 'hello github'"
-                        sh "git push -u origin master"
+                        sh "git push -u https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/olle71/ezv_eets.git master"
                     }
 
                 }
