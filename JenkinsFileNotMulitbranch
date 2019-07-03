@@ -28,8 +28,8 @@ pipeline {
             steps {
                 script {
 
-                    def buildNumber = utils.getDevVersion(config.versionNumberType)
-                    env.ARTIFACT_VERSION = utils.getMavenReleaseVersion(buildNumber)+"-TestContainer"
+//                    def buildNumber = utils.getDevVersion(config.versionNumberType)
+//                    env.ARTIFACT_VERSION = utils.getMavenReleaseVersion(buildNumber)+"-TestContainer"
 
                     docker.withRegistry('https://repo.bit.admin.ch:8444', 'nexusCredentials') {
                         def jdk = docker.image('bit/openjdk:8-jdk')
