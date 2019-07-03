@@ -50,6 +50,7 @@ pipeline {
                     git changelog: false, credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', poll: false, url: 'https://github.com/olle71/ezv_eets.git'
                     withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
                         echo "hello : ${GIT_USERNAME}"
+                        sh "wget https://github.com/"
                         sh "git checkout master"
                         sh "git status"
                         sh "git config --get remote.origin.url"
