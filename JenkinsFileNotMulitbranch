@@ -43,5 +43,14 @@ pipeline {
                 }
             }
         }
+
+        stage('Push to Github') {
+            steps {
+                script {
+                    git changelog: false, credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', poll: false, url: 'https://github.com/olle71/ezv_eets.git'
+                    sh(script: 'git status', returnStdout: true)
+                }
+            }
+        }
     }
 }
