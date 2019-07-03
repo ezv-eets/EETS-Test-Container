@@ -47,11 +47,13 @@ pipeline {
         stage('Push to Github') {
             steps {
                 script {
-                    //git changelog: false, credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', poll: false, url: 'https://github.com/olle71/ezv_eets.git'
+                    git changelog: false, credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', poll: false, url: 'https://github.com/olle71/ezv_eets.git'
                     //sh "git fetch"
                     withCredentials([usernamePassword(credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', passwordVariable: 'GIT_PASSWORD', usernameVariable: 'GIT_USERNAME')]) {
                         sh "git status"
                         sh "git checkout -f master"
+                        sh "git add *"
+                        sh "git commit -m 'hello github'"
                         sh('git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/olle71/ezv_eets.git')
                     }
 //                    withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', usernameVariable: 'GIT_USERNAME', passwordVariable: 'GIT_PASSWORD']]) {
