@@ -1,0 +1,47 @@
+#!/usr/bin/env groovy
+@Library('jeap-pipelinelibrary@master') _
+pipeline {
+
+    agent {
+        node {
+            label 'docker'
+        }
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+        skipStagesAfterUnstable()
+        timeout(time: 1, unit: 'HOURS')
+        timestamps()
+    }
+
+    stages {
+        stage('Prepare build environment') {
+            steps {
+                script {
+                    mavenPrepare { }
+                }
+            }
+        }
+
+        stage('Build and Deploy EETS-P-I-S for Test-Container') {
+            steps {
+                script {
+
+                    def buildNumber = utils.getDevVersion(config.versionNumberType)
+                    env.ARTIFACT_VERSION = utils.getMavenReleaseVersion(buildNumber)+"-TestContainer"
+
+                    docker.withRegistry('https://repo.bit.admin.ch:8444', 'nexusCredentials') {
+                        def jdk = docker.image('bit/openjdk:8-jdk')
+                        jdk.pull()
+                        jdk.inside('-u root') {
+                             sh "mvn dependency:get -DgroupId=ch.admin.ezv.eets -DartifactId=eets-provider-interface-service -Dversion=****  -Ddest=eets-provider-interface-service/eets-provider-interface-service.jar"
+                             sh "mvn dependency:get -DgroupId=ch.admin.ezv.eets -DartifactId=eets-test-support-service -Ddest=eets-test-support-service/eets-test-support-service.jar"
+
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
