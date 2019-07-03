@@ -48,7 +48,9 @@ pipeline {
             steps {
                 script {
                     git changelog: false, credentialsId: '4a68abf6-d9bf-424a-8222-004426031766', poll: false, url: 'https://github.com/olle71/ezv_eets.git'
+                    sh "git status"
                     sh "git config --get remote.origin.url"
+                    sh "git commit -a -m 'hello github'"
                     sh "git push -u origin master"
                 }
             }
