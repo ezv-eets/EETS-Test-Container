@@ -26,33 +26,45 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
-    <dependencyManagement>
-        <dependencies>
-
-        </dependencies>
-    </dependencyManagement>
-
+    <dependencies>
+        <dependency>
+            <groupId>ch.admin.ezv.eets</groupId>
+            <artifactId>eets-provider-interface-service</artifactId>
+            <version>LATEST</version>
+        </dependency>
+    </dependencies>
 
 
     <build>
         <finalName>eets-test-container</finalName>
         <plugins>
-
-
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
-                <configuration>
-                    <!-- see: https://stackoverflow.com/questions/53010200/maven-surefire-could-not-find-forkedbooter-class -->
-                    <useSystemClassLoader>false</useSystemClassLoader>
-                </configuration>
-            </plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>ch.admin.ezv.eets</groupId>
+                                    <artifactId>eets-provider-interface-service</artifactId>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${project.basedir}/eets-provider-interface-service</outputDirectory>
+                                    <destFileName>eets-provider-interface-service.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
 
+                </executions>
+            </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
-
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-site-plugin</artifactId>
@@ -61,7 +73,6 @@
                         <skip>true</skip>
                     </configuration>
                 </plugin>
-
             </plugins>
         </pluginManagement>
     </build>
