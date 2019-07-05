@@ -26,47 +26,10 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
     </properties>
 
-<!--    <dependencies>-->
-<!--        <dependency>-->
-<!--            <groupId>ch.admin.ezv.eets</groupId>-->
-<!--            <artifactId>eets-provider-interface-service</artifactId>-->
-<!--            <version>0.17.0-11</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>ch.admin.ezv.eets</groupId>-->
-<!--            <artifactId>eets-test-support-service</artifactId>-->
-<!--            <version>0.16.0-1</version>-->
-<!--        </dependency>-->
-<!--    </dependencies>-->
-
 
     <build>
         <finalName>eets-test-container</finalName>
         <plugins>
-<!--            <plugin>-->
-<!--                <artifactId>maven-dependency-plugin</artifactId>-->
-<!--                <executions>-->
-<!--                    <execution>-->
-<!--                        <id>copy</id>-->
-<!--                        <phase>package</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>copy</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <artifactItems>-->
-<!--                                <artifactItem>-->
-<!--                                    <groupId>ch.admin.ezv.eets</groupId>-->
-<!--                                    <artifactId>eets-provider-interface-service</artifactId>-->
-<!--                                    <overWrite>true</overWrite>-->
-<!--                                    <outputDirectory>${project.basedir}/eets-provider-interface-service</outputDirectory>-->
-<!--                                    <destFileName>eets-provider-interface-service.jar</destFileName>-->
-<!--                                </artifactItem>-->
-<!--                            </artifactItems>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-
-<!--                </executions>-->
-<!--            </plugin>-->
         </plugins>
         <pluginManagement>
             <plugins>

@@ -39,7 +39,7 @@ services:
       - MYSQL_DATABASE=db-testsupport
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   eets-testcontainer-testsupportservice:
-    build: ./eets-testsupport-service
+    build: eets-test-support-service
     container_name: eets-testcontainer-testsupportservice
     ports:
       - "8096:8096"
