@@ -49,7 +49,7 @@ services:
       - "eets-testcontainer-mariadb"
       - "eets-testcontainer-messagebroker"
   eets-provider-interface-service:
-    build: ./eets-providerinterface-service
+    build: ./eets-provider-interface-service
     container_name: eets-provider-interface-service
     ports:
       - "8089:8089"
