@@ -39,13 +39,15 @@ services:
       - MYSQL_DATABASE=db-testsupport
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   eets-testcontainer-testsupportservice:
-    build: ./eets-testsupport-service
+    build:
+      context: ./eets-testsupport-service
+      args:
+        - SIGNING_CERTIFICATE_FILE=./somecert.pem
     container_name: eets-testcontainer-testsupportservice
     ports:
       - "8096:8096"
     volumes:
       - ./provider.properties:/var/eets/test/service-conf/provider.properties
-      - ./cert/signing-crt.pem:/var/eets/test/service-conf/signing-crt.pem
     depends_on:
       - "eets-testcontainer-mariadb"
       - "eets-testcontainer-messagebroker"
