@@ -4,6 +4,7 @@ volumes:
   testsupport-data:
   rabbit-data:
   nginx-configuration-data:
+  minio-data:
 services:
   eets-testcontainer-proxy:
     container_name: eets-testcontainer-proxy
@@ -22,6 +23,9 @@ services:
     user: rabbitmq:rabbitmq
     volumes:
       - rabbit-data:/var/lib/rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   eets-testcontainer-mariadb:
     image: mariadb
     container_name: eets-testcontainer-mariadb
@@ -35,11 +39,22 @@ services:
       - MYSQL_PASSWORD=secret
       - MYSQL_DATABASE=db-testsupport
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
+  eets-testcontainer-minio:
+    image: repo.bit.admin.ch:8444/bit/minio:1.0.0
+    volumes:
+      - minio-data:/export
+    container_name: eets-testcontainer-minio
+    ports:
+      - "9000:9000"
+    environment:
+      MINIO_ACCESS_KEY: "admin"
+      MINIO_SECRET_KEY: "secretsecret"
+    command: "server /export"
   eets-testcontainer-testsupportservice:
     build:
       context: ./eets-testsupport-service
       args:
-        - SIGNING_CERTIFICATE_FILE=somecert.pem
+        - SIGNING_CERTIFICATE_FILE=signing-cert.cer
     container_name: eets-testcontainer-testsupportservice
     ports:
       - "8096:8096"
@@ -48,6 +63,7 @@ services:
     depends_on:
       - "eets-testcontainer-mariadb"
       - "eets-testcontainer-messagebroker"
+      - "eets-testcontainer-minio"
   eets-testcontainer-provider-interface-service:
     build: ./eets-providerinterface-service
     container_name: eets-provider-interface-service
