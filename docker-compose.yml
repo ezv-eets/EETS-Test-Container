@@ -40,7 +40,7 @@ services:
       - MYSQL_DATABASE=db-testsupport
       - MYSQL_RANDOM_ROOT_PASSWORD=yes
   eets-testcontainer-minio:
-    image: repo.bit.admin.ch:8444/bit/minio:1.0.0
+    image: minio/minio
     volumes:
       - minio-data:/export
     container_name: eets-testcontainer-minio
