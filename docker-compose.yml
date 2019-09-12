@@ -52,7 +52,7 @@ services:
     command: "server /export"
   eets-testcontainer-testsupportservice:
     build:
-      context: ./eets-testsupport-service
+      context: ./eets-test-support-service
       args:
         - SIGNING_CERTIFICATE_FILE=signing-cert.cer
     container_name: eets-testcontainer-testsupportservice
@@ -65,7 +65,7 @@ services:
       - "eets-testcontainer-messagebroker"
       - "eets-testcontainer-minio"
   eets-testcontainer-provider-interface-service:
-    build: ./eets-providerinterface-service
+    build: ./eets-provider-interface-service
     container_name: eets-provider-interface-service
     ports:
       - "8089:8089"
