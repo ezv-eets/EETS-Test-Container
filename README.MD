@@ -21,7 +21,7 @@ Please add the `commonName` property to the `provider.properties`-file as well.
 The production environment of the IS-EETS-System uses mutual TLS authentication. 
 To achieve a similar setup for your test a few thing need to be considered:
 * Export your CA-Certificate and save it to the following path: `cert/client_ca.crt`. This allows us to establish a trust relationship to the (potentially self-signed) certificate your system uses for testing purposes.
-* In order for your system to establish trust to this container setup you have two options.<br> 1. You can use the self-signed certificates that we deliver within the `cert`-folder and make sure that your system trust those.
+* In order for your system to establish trust to this container setup you have two options.<br> 1. You can use the self-signed certificates that we deliver within the `cert`-folder and make sure that your system trusts those.
 <br> 2. You can provide certificates that you created according to your systems needs. If you choose that option you have to export the certificate-cain (`cert/fullchain.pem`) as well as the private-key (`cert/privkey.pem`) and sve both files to the corresponding path. (Note that the filenames should be exact matches)
 #####Message signature
 All messages need to be digitally signed.
@@ -30,8 +30,7 @@ In order for us validate your systems signature we need to know the certificate 
 Please copy the certificate into the folder `eets-testsupport-service`.
 After that change the `SIGNING_CERTIFICATE_FILE` argument (in the `docker-compose.yml`) to match the relative path of your certificate.
 
-Since you might need to validate our signatures as well you can find the certificate that our test-setup uses for signing here: `eets-test-signing.crt`
-#TODO Provider the Cert we use to sign messages
+Since you might need to validate our signatures as well you can find the certificate that our test-setup uses for signing here: `cert/fca/eets-test-signing.crt`
  ###Startup
  After the configuration is completed starting the test-containers is pretty simple: Just run the following command in the project root directory:
  <br>```docker-compose up -d```
@@ -84,7 +83,6 @@ eets-testcontainer-testsupportservice: //service-name
 ### Tips
 As an easy way to keep track of both your configuration and possible upstream changes we would recommend you to fork this repository.
 
-
- 
 ###Get help / Get in touch 
-If you have some feedback or need help please open up an issue in this repository.
+If you have some feedback or need help please open an issue in this repository.
+ö
