@@ -85,4 +85,3 @@ As an easy way to keep track of both your configuration and possible upstream ch
 
 ### Get help / Get in touch 
 If you have some feedback or need help please open an issue in this repository.
-ö
