@@ -1,0 +1,256 @@
+openapi: 3.0.0
+info:
+  description: >-
+    REST API to prepare and assert test cases according to the EETS Provider
+    Interface Test Specification
+  title: EETS Test Support Service
+  contact:
+    name: >-
+      For more detailed information and issue tracking please refer to:
+      https://github.com/ezv-eets/EETS-Test-Container
+  license:
+    name: Apache License 2.0
+  version: ''
+tags:
+  - name: test-support-controller
+    description: Test Support Controller
+paths:
+  '/api/testsupport/assert/{testCaseId}':
+    get:
+      tags:
+        - test-support-controller
+      summary: >-
+        assert: to instruct the Docker Container of the assessment of the result
+        of the executed test case with parameter
+      operationId: assertDataUsingGET
+      parameters:
+        - name: testCaseId
+          in: path
+          description: 'verify: to verify if the which test was successful'
+          required: true
+          schema:
+            type: string
+            enum:
+              - SST-01a
+              - SST-01b
+              - SST-01c
+              - SST-02a
+              - SST-02b
+              - SST-02c
+              - SST-02d
+              - SST-03a
+              - SST-03b
+              - SST-04a
+              - SST-04b
+              - SST-04c
+              - SST-05a
+              - SST-05b
+              - SST-05c
+              - SST-05d
+              - SST-05e
+              - SST-06a
+              - SST-06b
+              - SST-06c
+              - SST-06d
+              - SST-07a
+              - SST-07b
+              - SST-07c
+      responses:
+        '200':
+          description: 'Success, the verification result requested is available in the body'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TestResult'
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+  '/api/testsupport/setState/{testCaseId}':
+    put:
+      tags:
+        - test-support-controller
+      summary: Sets the system up for a specific test
+      operationId: setStateUsingPUT
+      parameters:
+        - name: testCaseId
+          in: path
+          description: >-
+            setup: to instruct the Docker Container of the which test case to
+            perform, in the execution step with parameter
+          required: true
+          schema:
+            type: string
+            enum:
+              - SST-01a
+              - SST-01b
+              - SST-01c
+              - SST-02a
+              - SST-02b
+              - SST-02c
+              - SST-02d
+              - SST-03a
+              - SST-03b
+              - SST-04a
+              - SST-04b
+              - SST-04c
+              - SST-05a
+              - SST-05b
+              - SST-05c
+              - SST-05d
+              - SST-05e
+              - SST-06a
+              - SST-06b
+              - SST-06c
+              - SST-06d
+              - SST-07a
+              - SST-07b
+              - SST-07c
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestDataDto'
+        description: Optional test data
+      responses:
+        '200':
+          description: >-
+            The message is syntactically correct and successfully processed. The
+            system is now ready for the test.
+        '201':
+          description: Created
+        '401':
+          description: Unauthorized
+        '403':
+          description: Forbidden
+        '404':
+          description: Not Found
+      deprecated: false
+servers:
+  - url: '//localhost:8096/'
+components:
+  schemas:
+    TestDataDto:
+      type: object
+      properties:
+        billingDetailsId_1_billingDetailsNum:
+          type: integer
+          format: int32
+          example: 10
+        billingDetailsId_2_billingDetailsNum:
+          type: integer
+          format: int32
+          example: 20
+        billingDetailsId_3_billingDetailsNum:
+          type: integer
+          format: int32
+          example: 30
+        billingDetailsId_4_billingDetailsNum:
+          type: integer
+          format: int32
+          example: 40
+        billingDetailsId_X_billingDetailsNum:
+          type: integer
+          format: int32
+          example: 9999
+          description: Unknown BillingDetailsId to the EETS Provider
+        pan_1:
+          type: string
+          example: 308417112233445501FF
+          description: All user details available (known)
+        pan_2:
+          type: string
+          example: 308417112233445502FF
+          description: User detail "preferredUserLanguage" not available
+        pan_3:
+          type: string
+          example: 408417112233445503FF
+          description: 'Unknown user, no user details available'
+        tollDeclarationId_1_declarationId:
+          type: integer
+          format: int32
+          example: 101
+        tollDeclarationId_1_issuerId:
+          type: string
+          example: EETS Provider
+        tollDeclarationId_2_declarationId:
+          type: integer
+          format: int32
+          example: 201
+        tollDeclarationId_2_issuerId:
+          type: string
+          example: EETS Provider
+        userId_1_alphabetIndicator:
+          type: integer
+          format: int32
+          example: 1
+        userId_1_countryCode:
+          type: string
+          example: AT
+        userId_1_equipmentOBUId:
+          type: string
+          example: '0410000010'
+        userId_1_licencePlateNumber:
+          type: string
+          example: 5731303230
+        userId_1_manufacturerId:
+          type: string
+          example: '0001'
+        userId_2_alphabetIndicator:
+          type: integer
+          format: int32
+          example: 1
+        userId_2_countryCode:
+          type: string
+          example: DE
+        userId_2_equipmentOBUId:
+          type: string
+          example: 0000081234
+        userId_2_licencePlateNumber:
+          type: string
+          example: 48484142313233
+        userId_2_manufacturerId:
+          type: string
+          example: '0007'
+        userId_3_alphabetIndicator:
+          type: integer
+          format: int32
+          example: 1
+        userId_3_countryCode:
+          type: string
+          example: 'NO'
+        userId_3_equipmentOBUId:
+          type: string
+          example: '0000102030'
+        userId_3_licencePlateNumber:
+          type: string
+          example: 48484142313233
+        userId_3_manufacturerId:
+          type: string
+          example: '0006'
+      title: TestDataDto
+      description: The test data
+    TestResult:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+        executionTime:
+          type: string
+          format: date-time
+        state:
+          type: string
+          enum:
+            - PASSED
+            - FAILED
+        testResultId:
+          type: string
+      title: TestResult
+  links: {}
+  callbacks: {}
+security: []
