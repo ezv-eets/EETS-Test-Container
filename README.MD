@@ -22,7 +22,7 @@ The production environment of the IS-EETS-System uses mutual TLS authentication.
 To achieve a similar setup for your test a few things need to be considered:
 * Export your CA-Certificate and save it to the following path: `cert/client_ca.crt`. This allows us to establish a trust relationship to the (potentially self-signed) certificate your system uses for testing purposes.
 * In order for your system to establish trust to this container setup you have two options.<br> 1. You can use the self-signed certificates that we deliver within the `cert`-folder and make sure that your system trusts those.
-<br> 2. You can provide certificates that you created according to your system's needs. If you choose that option you have to export the certificate-cain (`cert/fullchain.pem`) as well as the private-key (`cert/privkey.pem`) and save both files to the corresponding path. (Note that the filenames should be exact matches)
+<br> 2. You can provide certificates that you created according to your p needs. If you choose that option you have to export the certificate-cain (`cert/fullchain.pem`) as well as the private-key (`cert/privkey.pem`) and save both files to the corresponding path. (Note that the filenames should be exact matches)
 ##### Message signature
 All messages need to be digitally signed.
  
