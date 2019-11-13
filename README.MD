@@ -82,7 +82,7 @@ eets-testcontainer-testsupportservice: //service-name
  
  
 ### OpenAPI definition
-The OpenAPI definition of the test-support-service's REST interface can be found at `docs/openapi.yml`
+The OpenAPIp definition of the test-support-service's REST interface can be found at `docs/openapi.yml`
 
 ### Tips
 As an easy way to keep track of both your configuration and possible upstream changes we would recommend forking this repository.

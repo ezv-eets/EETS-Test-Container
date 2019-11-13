@@ -26,19 +26,20 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-  eets-testcontainer-mariadb:
-    image: mariadb
-    container_name: eets-testcontainer-mariadb
+  eets-testcontainer-postgres:
+    image: bitnami/postgresql:10.6.0
+    container_name: eets-testcontainer-postgres
     ports:
-      - "3320:3306"
-    user: mysql:mysql
-    volumes:
-      - db-data:/var/lib/mysql
+      - "5432:5432"
     environment:
-      - MYSQL_USER=eets
-      - MYSQL_PASSWORD=secret
-      - MYSQL_DATABASE=db-testsupport
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
+      - "POSTGRES_USER=eets"
+      - "POSTGRES_PASSWORD=secret"
+      - "POSTGRES_DB=db-testsupport"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
   eets-testcontainer-minio:
     image: minio/minio
     volumes:
@@ -61,7 +62,7 @@ services:
     volumes:
       - ./provider.properties:/var/eets/test/service-conf/provider.properties
     depends_on:
-      - "eets-testcontainer-mariadb"
+      - "eets-testcontainer-postgres"
       - "eets-testcontainer-messagebroker"
       - "eets-testcontainer-minio"
   eets-testcontainer-provider-interface-service:
