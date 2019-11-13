@@ -57,7 +57,7 @@ The most common settings that may need to be changed will be described here. How
 By default our services bind to the following ports of the host system:
 * 0.0.0.0:80 --> Redirects to 0.0.0.0:443 
 * 0.0.0.0:443 -->   The FCA's interface to the eets-providers
-* 0.0.0.0:3320 --> The database of our services
+* 0.0.0.0:5432 --> The database of our services
 * 0.0.0.0:8096 --> The Test-Support-Service that allows you to prepare, execute and assess the defined test-cases.
 
 If you want to change these bindings you need to adjust the `docker-compose.yml` file. For each service that publishes ports there is a configuration-section like this:
@@ -82,7 +82,7 @@ eets-testcontainer-testsupportservice: //service-name
  
  
 ### OpenAPI definition
-The OpenAPIp definition of the test-support-service's REST interface can be found at `docs/openapi.yml`
+The OpenAPI definition of the test-support-service's REST interface can be found at `docs/openapi.yml`
 
 ### Tips
 As an easy way to keep track of both your configuration and possible upstream changes we would recommend forking this repository.
