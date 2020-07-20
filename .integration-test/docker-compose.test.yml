@@ -1,0 +1,8 @@
+version: "3.7"
+services:
+  testcontainer-verification:
+    image: curlimages/curl:latest
+    depends_on:
+      - "eets-testcontainer-provider-interface-service"
+    #entrypoint: ["sh"]
+    command: ["http://eets-testcontainer-testsupportservice:8096/api/testsupport/setState/SST-01a"]
