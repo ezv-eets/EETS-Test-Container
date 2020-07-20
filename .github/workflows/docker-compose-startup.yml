@@ -1,0 +1,21 @@
+name: Docker
+
+on:
+  push:
+    branches:
+      - master
+
+    # Publish `v1.2.3` tags as releases.
+    tags:
+      - v*
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+            docker-compose --file docker-compose.yml build --no-cache
+            docker-compose --file docker-compose.yml --file .integration-test/docker-compose.test.yml run testcontainer-verification

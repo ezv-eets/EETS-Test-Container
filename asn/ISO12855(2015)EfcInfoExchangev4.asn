@@ -1593,7 +1593,7 @@ AduReasonCode ::= INTEGER {
 	acceptedWithWarning							(4000),
 
 	-- 10101-10108 TrustObjectsADU specific error codes
-
+ 
 	tObj-differentContractProvider				(10101), -- EFCContextMark.contractProvider <> apci.apduOriginator
 
 	tObj-invalidEncryptionKeyIssuer				(10102), -- EncryptionKeyId.issuer is not Kapsch
@@ -1610,7 +1610,16 @@ AduReasonCode ::= INTEGER {
 
 	tObj-differentTrustObjectStatus				(10108), -- Different trustObjectStatus in the trust objects.
 
-	-- 10301-10303 ExceptionListADU specific error codes
+	-- 10201 - 10203 ContractIssuerListADU specific error codes
+
+    ciL-shortValidity                          (10201), -- Validation period too short.
+
+	ciL-alreadyExists                          (10202), -- ObeConfiguration already exists (creation).
+
+	ciL-doesNotExist                           (10203), -- ObeConfiguration does not exist (revocation).
+
+
+	-- 10301-10303 ExceptionListADU specific error codes 
 
 	exL-oldExeptionListEntry                   (10301), -- one or more ExceptionListEntry are too old (see date/time in entryValidityStart)
 
@@ -1630,14 +1639,14 @@ AduReasonCode ::= INTEGER {
 
 	bilD-invalidLpn                            (11005), -- Invalid/unknown licence plate number
 
-	-- 11101-11109 PaymentClaimADU specific error codes
+	-- 11101-11109 PaymentClaimADU specific error codes 
 
 	paC-wrongPaymentClaimAmount					(11101), -- The paymentClaimAmont is not the result of the sum from the billingDetailsList amounts.
 
-	paC-unknownBillingDetails					(11102)	 -- One or more referenced billing details are unknown.
+	paC-unknownBillingDetails					(11102)	 -- One or more referenced billing details are unknown.		
 
 
-	} ( 0..1 | 100..101 | 200..206 | 400..405 | 500..502 | 700..715 | 800..809 | 1200..1203 | 3000 | 3010 | 4000 | 10101..10108 | 10301..10303 | 11001..11102 )
+	} ( 0..1 | 100..101 | 200..206 | 400..405 | 500..502 | 700..715 | 800..809 | 1200..1203 | 3000 | 3010 | 4000 | 10101..10108 | 10201..10203 | 10301..10303 | 11001..11102 )
 
 
 
@@ -2509,225 +2518,225 @@ ExceptionListActionType ::= INTEGER {
 
 
 
-AbnormalOBEReasonCode ::= 	INTEGER {
+AbnormalOBEReasonCode ::= 	INTEGER { 
 
-	reasonNotToBeDisclosed		(0),
+	reasonNotToBeDisclosed		(0), 
 
-	obeIsDefect			(1),
+	obeIsDefect			(1), 
 
-	obeIsNotWorkingProperly		(2),
+	obeIsNotWorkingProperly		(2), 
 
-	userShowsFraudBehaviour		(3),
+	userShowsFraudBehaviour		(3), 
 
 	userShowsViolatingBehaviour	(4)
 
+	
 
+	-- 5-100 reserved for future CEN and ISO use 
 
-	-- 5-100 reserved for future CEN and ISO use
-
-	-- 101-255 reserved for private use
+	-- 101-255 reserved for private use 
 
 	} (0..255)
 
+ 
 
+-- Payment claim 
 
--- Payment claim
+ 
 
+PaymentClaimStatus ::= INTEGER { 
 
-
-PaymentClaimStatus ::= INTEGER {
-
-	firstVersion	(0),
+	firstVersion	(0), 
 
 	amendedVersion	(1)
 
+	
 
+	-- 3-100 reserved for future CEN and ISO use 
 
-	-- 3-100 reserved for future CEN and ISO use
-
-	-- 101-255 reserved for private use
+	-- 101-255 reserved for private use 
 
 	} (0..255)
 
+ 
 
+TypeOfFee ::= INTEGER { 
 
-TypeOfFee ::= INTEGER {
+	toll			(0), 
 
-	toll			(0),
+	discount		(1), 
 
-	discount		(1),
+	creditnote		(2), 
 
-	creditnote		(2),
-
-	penalty			(3),
+	penalty			(3), 
 
 	processingFee	(4)
 
+	 
 
+	-- 5-100 reserved for future CEN and ISO use 
 
-	-- 5-100 reserved for future CEN and ISO use
-
-	-- 101-255 reserved for private use
+	-- 101-255 reserved for private use 
 
 	} (0..255)
 
+ 
 
+-- EFC Context Data 
 
--- EFC Context Data
+ 
 
+ChargeLocation ::= 	SEQUENCE { 
 
+	description		UTF8String OPTIONAL, 
 
-ChargeLocation ::= 	SEQUENCE {
+	chargePointId	LocationOfStation, 
 
-	description		UTF8String OPTIONAL,
+	chargePoint		AbsolutePointCoordinates OPTIONAL, 
 
-	chargePointId	LocationOfStation,
+	cpLocation		SessionLocation,  
 
-	chargePoint		AbsolutePointCoordinates OPTIONAL,
+	eventType		SessionType 
 
-	cpLocation		SessionLocation,
+	}  
 
-	eventType		SessionType
+ 
 
-	}
+LocationOfStation ::= INTEGER 
 
+ 
 
+SessionType::= INTEGER {  -- Type of session 
 
-LocationOfStation ::= INTEGER
+	accessClosedSystem	(0), 
 
+	exitClosedSystem	(1), 
 
-
-SessionType::= INTEGER {  -- Type of session
-
-	accessClosedSystem	(0),
-
-	exitClosedSystem	(1),
-
-	openSystem		(2),
+	openSystem		(2), 
 
 	checkPoint		(3)
 
+	 
 
+	-- 4-100 reserved for future CEN and ISO use 
 
-	-- 4-100 reserved for future CEN and ISO use
-
-	-- 101-255 reserved for private use
+	-- 101-255 reserved for private use 
 
 	} (0..255)
 
 
 
-FeeModifiers ::= SEQUENCE {
+FeeModifiers ::= SEQUENCE { 
 
-	typeOfUsage		SEQUENCE OF ExemptedVehicleClasses OPTIONAL,
+	typeOfUsage		SEQUENCE OF ExemptedVehicleClasses OPTIONAL, 
 
-	volumeDiscounts	SEQUENCE OF SEQUENCE {
+	volumeDiscounts	SEQUENCE OF SEQUENCE { 
 
-		timeInterval		TimeInterval OPTIONAL,
+		timeInterval		TimeInterval OPTIONAL, 
 
-		forVehicleClasses	SEQUENCE OF ForVehicleClass OPTIONAL
+		forVehicleClasses	SEQUENCE OF ForVehicleClass OPTIONAL 
 
-		} OPTIONAL
+		} OPTIONAL 
 
 	}
 
+ 
 
+ExemptedVehicleClasses ::= INTEGER { 
 
-ExemptedVehicleClasses ::= INTEGER {
+	handicappedPeople	(1), 
 
-	handicappedPeople	(1),
+	military		(2), 
 
-	military		(2),
+	police			(3), 
 
-	police			(3),
+	roadMaintenance		(4), 
 
-	roadMaintenance		(4),
+	circusTruck		(5), 
 
-	circusTruck		(5),
+	mobileShopTruck		(6), 
 
-	mobileShopTruck		(6),
+	truckCarryingMilk	(7), 
 
-	truckCarryingMilk	(7),
-
-	truckCarryingTimber	(8),
+	truckCarryingTimber	(8), 
 
 	publicTransportBus	(9)
 
+	 
 
+	-- 10-100 reserved for future CEN and ISO use 
 
-	-- 10-100 reserved for future CEN and ISO use
-
-	-- 101-255 reserved for private use
+	-- 101-255 reserved for private use 
 
 	} (0..255)
 
+ 
 
+TimeInterval ::= INTEGER { 
 
-TimeInterval ::= INTEGER {
+	day    (1), 
 
-	day    (1),
+	week   (2), 
 
-	week   (2),
-
-	month  (3),
+	month  (3), 
 
 	year   (4)
 
+	 
 
+	-- 5-100 reserved for future CEN and ISO use 
 
-	-- 5-100 reserved for future CEN and ISO use
-
-	-- 101-255 reserved for private use
+	-- 101-255 reserved for private use 
 
 	} (0..255)
 
+ 
 
+ForVehicleClass ::=   	SEQUENCE { --- definition of volume related discounts 
 
-ForVehicleClass ::=   	SEQUENCE { --- definition of volume related discounts
+	vehicleClass      	INTEGER, 
 
-	vehicleClass      	INTEGER,
+	activationFee     	SEQUENCE { 
 
-	activationFee     	SEQUENCE {
+		amount       		ExtendedPaymentAmount, 
 
-		amount       		ExtendedPaymentAmount,
+		timeInterval   		TimeInterval OPTIONAL 
 
-		timeInterval   		TimeInterval OPTIONAL
+		} OPTIONAL, 
 
-		} OPTIONAL,
+	minAmountOfFee    	ExtendedPaymentAmount OPTIONAL, 
 
-	minAmountOfFee    	ExtendedPaymentAmount OPTIONAL,
+	numberOfTrips     	SEQUENCE { 
 
-	numberOfTrips     	SEQUENCE {
+		fromChargeObject        ChargeObjectId, 
 
-		fromChargeObject        ChargeObjectId,
+		toChargeObject          ChargeObjectId, 
 
-		toChargeObject          ChargeObjectId,
+		perTimeClass            BOOLEAN OPTIONAL, 
 
-		perTimeClass            BOOLEAN OPTIONAL,
+		pervehicleClass         BOOLEAN OPTIONAL, 
 
-		pervehicleClass         BOOLEAN OPTIONAL,
+		numberOfTripsDiscounts  SEQUENCE OF NumberOfTripsDiscount 
 
-		numberOfTripsDiscounts  SEQUENCE OF NumberOfTripsDiscount
+		} OPTIONAL 
 
-		} OPTIONAL
+	} 
 
-	}
+ 
 
+NumberOfTripsDiscount ::= 	SEQUENCE { 
 
+	minNumberOfTrips		INTEGER, 
 
-NumberOfTripsDiscount ::= 	SEQUENCE {
+	discount			INTEGER, -- in 0,1% 
 
-	minNumberOfTrips		INTEGER,
+	onlyForAmountAboveLimit		BOOLEAN OPTIONAL 
 
-	discount			INTEGER, -- in 0,1%
+	} 
 
-	onlyForAmountAboveLimit		BOOLEAN OPTIONAL
+ 
 
-	}
-
-
-
--- General definitions
+-- General definitions 
 
 
 
@@ -2743,7 +2752,7 @@ ActionCode ::= INTEGER {
 
 	resend	(4)
 
-
+	
 
 	-- 5-100 reserved for future CEN and ISO use
 
@@ -2751,71 +2760,71 @@ ActionCode ::= INTEGER {
 
 	} (0..255)
 
+ 
 
+UserId ::= 			SEQUENCE { 
 
-UserId ::= 			SEQUENCE {
+	pan				PersonalAccountNumber OPTIONAL, -- ISO 14906:2015 
 
-	pan				PersonalAccountNumber OPTIONAL, -- ISO 14906:2015
+	contractSerialNumber		ContractSerialNumber OPTIONAL,  -- ISO 14906:2015 
 
-	contractSerialNumber		ContractSerialNumber OPTIONAL,  -- ISO 14906:2015
+	licencePlateNumber		LPN OPTIONAL, 
 
-	licencePlateNumber		LPN OPTIONAL,
+	obeID				ObeId OPTIONAL                -- ISO 17575-1:2015 
 
-	obeID				ObeId OPTIONAL                -- ISO 17575-1:2015
-
-	}
-
-
-
- RecordId ::= SEQUENCE {
-
-	-- ADU independent identifier for identifying records
-
-	-- from other sources (e.g. enforcement operator)
-
-	providerId	Provider OPTIONAL,
-
-	recordType	RecordType OPTIONAL,
-
-	uniqueId	INTEGER
-
-   }
+	} 
 
 
 
-RecordType ::= 			INTEGER {
+ RecordId ::= SEQUENCE {   
 
-	cCCRecord			(1),
+	-- ADU independent identifier for identifying records  
 
-	imageRecord			(2),
+	-- from other sources (e.g. enforcement operator) 
 
-	anprRecord			(3),
+	providerId	Provider OPTIONAL, 
 
-	classificationRecord		(4),
+	recordType	RecordType OPTIONAL, 
 
-	operatorRecord			(5),
+	uniqueId	INTEGER 
+
+   }  
+
+ 
+
+RecordType ::= 			INTEGER { 
+
+	cCCRecord			(1), 
+
+	imageRecord			(2), 
+
+	anprRecord			(3), 
+
+	classificationRecord		(4), 
+
+	operatorRecord			(5), 
 
 	dsrcData			(6)
 
+	
 
+	-- 7-100 reserved for future CEN and ISO use 
 
-	-- 7-100 reserved for future CEN and ISO use
-
-	-- 101-255 reserved for private use
+	-- 101-255 reserved for private use 
 
 	} (0..255)
 
+ 
 
+TollDeclarationId ::= 		SEQUENCE { 
 
-TollDeclarationId ::= 		SEQUENCE {
+	issuerId			Provider, 
 
-	issuerId			Provider,
+	declarationId			INTEGER 
 
-	declarationId			INTEGER
+	} 
 
-	}
-
-
+ 
 
 ExtendedPaymentAmount ::= 	SEQUENCE {
 
@@ -2823,13 +2832,13 @@ ExtendedPaymentAmount ::= 	SEQUENCE {
 
 	paymentFeeUnit			PayUnit,
 
-	vatRate				INTEGER (0..10000) OPTIONAL   -- in 0.01%
+	vatRate				INTEGER (0..10000) OPTIONAL   -- in 0.01% 
 
 	}
 
 
 
-TollEventId ::= 		SEQUENCE {
+TollEventId ::= 		SEQUENCE { 
 
 	counterType			CHOICE {
 
@@ -2837,9 +2846,9 @@ TollEventId ::= 		SEQUENCE {
 
 		transactionCounter	INTEGER (0..4095)
 
-		},
+		}, 
 
-	usageStatementID	Int4
+	usageStatementID	Int4 
 
 	}
 
@@ -2873,13 +2882,13 @@ TrustObjectCode ::= 	CHOICE {
 
 
 
-CertificateObject ::= 	SEQUENCE {
+CertificateObject ::= 	SEQUENCE { 
 
-    certificateType 		CertificateType,
+    certificateType 		CertificateType, 
 
     certificate 		OCTET STRING -- Public-key certificate according to ISO 9594-8
 
-}
+} 
 
 
 
@@ -2907,7 +2916,7 @@ CertificateType ::= INTEGER {
 
     certTspCR    (10) -- charge report verification
 
-    -- 11-100 reserved for future CEN and ISO use
+    -- 11-100 reserved for future CEN and ISO use 
 
     -- 101-255 reserved for private use
 
@@ -2921,7 +2930,7 @@ PublicKeyObject ::= SEQUENCE {
 
     issuer              Provider,
 
-    algorithmIdentifier INTEGER,  -- definition of the public key algorithm, e.g. RSA, ECC
+    algorithmIdentifier INTEGER,  -- definition of the public key algorithm, e.g. RSA, ECC 
 
     publicKey           OCTET STRING
 
@@ -2939,7 +2948,7 @@ PublicKeyType ::= INTEGER {
 
     kpupTspEncrypt   (3)
 
-    -- 4-100 reserved for future CEN and ISO use
+    -- 4-100 reserved for future CEN and ISO use 
 
     -- 101-255 reserved for private use
 
@@ -3027,7 +3036,7 @@ ReferenceType ::= INTEGER {
 
     lACAuthenticationKeyRef (2)
 
-    -- 3-100 reserved for future CEN and ISO use
+    -- 3-100 reserved for future CEN and ISO use 
 
     -- 101-255 reserved for private use
 
@@ -3103,7 +3112,7 @@ KeyUsage ::= INTEGER{
 
 	}
 
-
+	
 
 KeySet::= SEQUENCE {
 
@@ -3123,19 +3132,19 @@ KeySet::= SEQUENCE {
 
 
 
--- Level 4 definitions
+-- Level 4 definitions 
 
--- May be imported from other modules later
+-- May be imported from other modules later 
 
 
 
 Int8Signed ::= INTEGER(-562949953421312..562949953421311)	-- -2^49 to 2^49-1
 
+    
 
+NumberOfADUStruct ::= 	INTEGER 
 
-NumberOfADUStruct ::= 	INTEGER
-
-
+ 
 
 /**
 ApduAuthenticator ::= 	SEQUENCE {
@@ -3191,13 +3200,13 @@ ApduContentDigest ::= 	SEQUENCE {
 
 	}
 
+ 
 
+ApduIdentifier ::= 		INTEGER 
 
-ApduIdentifier ::= 		INTEGER
+ 
 
-
-
-ExceptionListVersion ::= 	INTEGER
+ExceptionListVersion ::= 	INTEGER 
 
 
 
@@ -3208,4 +3217,6 @@ Int2 ::= INTEGER (0..32767)
 
 
 END
+
+
 
