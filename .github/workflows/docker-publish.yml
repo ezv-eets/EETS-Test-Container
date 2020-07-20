@@ -30,7 +30,7 @@ jobs:
         run: |
           if [ -f docker-compose.yml ]; then
             docker-compose --file docker-compose.yml build --no-cache
-            docker-compose --file docker-compose.yml run 
+            docker-compose --file docker-compose.yml up
           fi
 
   # Push image to GitHub Packages.
