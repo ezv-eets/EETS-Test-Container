@@ -5,4 +5,4 @@ services:
     depends_on:
       - "eets-testcontainer-provider-interface-service"
     #entrypoint: ["sh"]
-    command: ["http://eets-testcontainer-testsupportservice:8096/api/testsupport/setState/SST-01a"]
+    command: ["--retry-connrefused", "--retry", "10", "--retry-delay", "0","http://eets-testcontainer-testsupportservice:8096/api/testsupport/setState/SST-01a"]
