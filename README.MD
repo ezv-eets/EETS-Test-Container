@@ -87,5 +87,8 @@ The OpenAPI definition of the test-support-service's REST interface can be found
 ### Tips
 As an easy way to keep track of both your configuration and possible upstream changes we would recommend forking this repository.
 
+### Example ADU's
+To get an overview how an signed ADU look like, browse to the docs/example/adu directory. There you will find some example ADUs.
+
 ### Get help / Get in touch 
 If you have some feedback or need help please open an issue in this repository.
