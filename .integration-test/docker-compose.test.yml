@@ -1,8 +1,12 @@
 version: "3.7"
 services:
-  testcontainer-verification:
+  testcontainer-verification-tss:
     image: curlimages/curl:latest
     depends_on:
       - "eets-testcontainer-provider-interface-service"
-    #entrypoint: ["sh"]
     command: ["--retry-connrefused", "--retry", "10", "--retry-delay", "0","http://eets-testcontainer-testsupportservice:8096/api/testsupport/setState/SST-01a"]
+  testcontainer-verification-pis:
+    image: curlimages/curl:latest
+    depends_on:
+      - "eets-testcontainer-provider-interface-service"
+    command: ["--retry-connrefused", "--retry", "10", "--retry-delay", "0","http://eets-provider-interface-service:8089/actuator/health"]
