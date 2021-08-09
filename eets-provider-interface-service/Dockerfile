@@ -1,4 +1,5 @@
 FROM openjdk:11
+LABEL org.opencontainers.image.source="https://github.com/needtoroll/eets-test-container"
 MAINTAINER ezv.admin.ch
 COPY eets-provider-interface-service.jar /opt/eets/lib/
 ENV TZ=Europe/Zurich
