@@ -5,7 +5,6 @@ volumes:
   rabbit-data:
   nginx-configuration-data:
   minio-data:
-  testsupport-sig-cert-location:
 
 services:
   eets-testcontainer-proxy:
