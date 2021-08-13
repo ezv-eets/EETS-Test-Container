@@ -7,6 +7,9 @@ In order to run this container the following tools have to be installed on your 
 1. [Docker](https://docs.docker.com/install)
 2. [Docker-Compose](https://docs.docker.com/compose/install/)
 
+Additionally your device should have access to [ghcr.io](https://ghcr.io)
+The Github container registry is used to pull the container images build by the FCA of switzerland
+
 ### Configuration
 Before you can run any tests with this setup certain things have to be configured:
 #### Provider identification
@@ -26,9 +29,8 @@ To achieve a similar setup for your test a few things need to be considered:
 ##### Message signature
 All messages need to be digitally signed.
  
-In order for us validate your system's signature we need to know the certificate you are using to sign your messages.
-Please copy the certificate into the folder `eets-testsupport-service`.
-After that change the `SIGNING_CERTIFICATE_FILE` argument (in the `docker-compose.yml`) to match the relative path of your certificate.
+In order for us validate your system's signature we need to know the certificate(s) you are using to sign your messages.
+Please copy the certificate(s) into the folder `cert/provider-signing-cert`
 
 Since you might need to validate our signatures as well you can find the certificate that our test-setup uses for signing here: `cert/fca/eets-test-signing.crt`
  ### Startup
@@ -43,10 +45,10 @@ Since you might need to validate our signatures as well you can find the certifi
 We will keep publishing new versions of our services to this repository as our services (and the container solution around it) evolve.
 We recommend to pull from this repository on a regular basis.
 If a new version is available please perform a rebuild of the containers by running:
-<br>`docker-compose build --no-cache`<br>
+<br>`docker-compose pull`<br>
 
 You can also combine the build and startup command (depending on your OS and shell) by doing something like this:
-<br>`docker-compose build --no-cache && docker-compose up -d`
+<br>`docker-compose pull && docker-compose up -d`
 
 
 ### Advanced Configuration

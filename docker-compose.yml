@@ -5,6 +5,7 @@ volumes:
   rabbit-data:
   nginx-configuration-data:
   minio-data:
+
 services:
   eets-testcontainer-proxy:
     container_name: eets-testcontainer-proxy
@@ -52,21 +53,19 @@ services:
       MINIO_SECRET_KEY: "secretsecret"
     command: "server /export"
   eets-testcontainer-testsupportservice:
-    build:
-      context: ./eets-test-support-service
-      args:
-        - SIGNING_CERTIFICATE_FILE=signing-cert.cer
+    image: ghcr.io/ezv-eets/eets-test-container/eets-test-support-service
     container_name: eets-testcontainer-testsupportservice
     ports:
       - "8096:8096"
     volumes:
+      - ./cert/provider-signing-cert:/var/eets/test/service-conf/cert/provider-signing-cert
       - ./provider.properties:/var/eets/test/service-conf/provider.properties
     depends_on:
       - "eets-testcontainer-postgres"
       - "eets-testcontainer-messagebroker"
       - "eets-testcontainer-minio"
   eets-testcontainer-provider-interface-service:
-    build: ./eets-provider-interface-service
+    image: ghcr.io/ezv-eets/eets-test-container/eets-provider-interface-service
     container_name: eets-provider-interface-service
     ports:
       - "8089:8089"
