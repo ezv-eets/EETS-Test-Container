@@ -53,7 +53,7 @@ services:
       MINIO_SECRET_KEY: "secretsecret"
     command: "server /export"
   eets-testcontainer-testsupportservice:
-    image: ghcr.io/ezv-eets/eets-test-container/test-support-service
+    image: ghcr.io/ezv-eets/eets-test-container/eets-test-support-service
     container_name: eets-testcontainer-testsupportservice
     ports:
       - "8096:8096"
@@ -65,7 +65,7 @@ services:
       - "eets-testcontainer-messagebroker"
       - "eets-testcontainer-minio"
   eets-testcontainer-provider-interface-service:
-    image: ghcr.io/ezv-eets/eets-test-container/provider-interface-service
+    image: ghcr.io/ezv-eets/eets-test-container/eets-provider-interface-service
     container_name: eets-provider-interface-service
     ports:
       - "8089:8089"
