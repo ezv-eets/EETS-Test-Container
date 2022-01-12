@@ -28,7 +28,7 @@ services:
       - "5672:5672"
       - "15672:15672"
   eets-testcontainer-postgres:
-    image: bitnami/postgresql:10.6.0
+    image: bitnami/postgresql:11.13.0
     container_name: eets-testcontainer-postgres
     ports:
       - "5432:5432"
@@ -46,12 +46,18 @@ services:
     volumes:
       - minio-data:/export
     container_name: eets-testcontainer-minio
+    command:
+      - server
+      - --address=0.0.0.0:9000
+      - --console-address=0.0.0.0:9001
+      - /export
     ports:
       - "9000:9000"
+      - "9001:9001"
     environment:
-      MINIO_ACCESS_KEY: "admin"
-      MINIO_SECRET_KEY: "secretsecret"
-    command: "server /export"
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "secretsecret"
+      MINIO_DEFAULT_BUCKETS: "bazg-camiuns-eets-pis-tc"
   eets-testcontainer-testsupportservice:
     image: ghcr.io/ezv-eets/eets-test-container/eets-test-support-service
     container_name: eets-testcontainer-testsupportservice
@@ -70,4 +76,5 @@ services:
     ports:
       - "8089:8089"
     depends_on:
+      - "eets-testcontainer-minio"
       - "eets-testcontainer-testsupportservice"
