@@ -660,7 +660,7 @@ ClosedContextType ::= 		INTEGER {
 
 	interconnectedClosedSysytem (2)	-- More Operators
 
-	} (0..255)
+	} (1..2)
 
 ClosedSystem 	::= 		SEQUENCE { 
 
@@ -1015,7 +1015,7 @@ PaymentStatus ::= INTEGER {
 
   	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..6)
 
 
 
@@ -1051,7 +1051,7 @@ ChargeObjectType ::= 	INTEGER {
 
 		-- 101-255 reserved for private use
 
-	} (0..255)
+	} (1..4)
 
 
 /**
@@ -1077,7 +1077,7 @@ UserIdRequestType ::= INTEGER {
 
 		-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0)
 
 
 
@@ -1305,7 +1305,7 @@ ModeOfOperation ::= INTEGER {
 
 
 
-	} (0..255)
+	} (1..3)
 
 
 
@@ -1343,7 +1343,7 @@ FeeQualifier ::= INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..3)
 
 
 
@@ -1383,7 +1383,7 @@ DiscountQualifier	::= INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..4)
 
 
 
@@ -1447,7 +1447,7 @@ GeneralStatusCode ::= INTEGER {
 
 		-- 101-255 reserved for private use
 
-	} (0..255)
+	} (1..2)
 
 
 
@@ -1906,7 +1906,7 @@ UserParameterRequest ::= INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..27)
 
 
 
@@ -1926,7 +1926,7 @@ UserDetailsRequestReason ::= INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..3)
 
 
 
@@ -2104,7 +2104,7 @@ UserParameterStatus ::=   INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..3)
 
 
 
@@ -2144,7 +2144,7 @@ InitiatedAction ::=   		INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..4)
 
 
 
@@ -2178,7 +2178,7 @@ LocationProviderId ::= INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (1..3)
 
 
 
@@ -2270,7 +2270,7 @@ TransactionStatus ::= 	INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (1..3)
 
 
 
@@ -2288,7 +2288,7 @@ AuthCheckResult ::= 	INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (1..3)
 
 
 
@@ -2320,7 +2320,7 @@ AuthCheckResult ::= 	INTEGER {
 
 	-- 101-255 reserved for private use
 
-						} (0..255)
+						} (0..7)
 
 
 
@@ -2368,7 +2368,7 @@ TrustObjectPurposes ::= INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..16)
 
 
 
@@ -2378,15 +2378,16 @@ TrustObjectStatus ::= INTEGER {
 
 	expired	(1),
 
-	revoked	(2)
+	revoked	(2),
 
+	update (101)
 
 
 	-- 3-100 reserved for future CEN and ISO use
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..2 | 101)
 
 
 
@@ -2418,7 +2419,7 @@ QualityParameterStatus ::= 			INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..7)
 
 
 
@@ -2476,7 +2477,7 @@ ExceptionListStatusType ::= 	INTEGER {
 
 	-- 101-255 reserved for private use
 
-	} (0..255)
+	} (0..3)
 
 
 
@@ -2536,7 +2537,7 @@ AbnormalOBEReasonCode ::= 	INTEGER {
 
 	-- 101-255 reserved for private use 
 
-	} (0..255)
+	} (0..4)
 
  
 
@@ -2556,7 +2557,7 @@ PaymentClaimStatus ::= INTEGER {
 
 	-- 101-255 reserved for private use 
 
-	} (0..255)
+	} (0..1)
 
  
 
@@ -2578,7 +2579,7 @@ TypeOfFee ::= INTEGER {
 
 	-- 101-255 reserved for private use 
 
-	} (0..255)
+	} (0..4)
 
  
 
@@ -2622,7 +2623,7 @@ SessionType::= INTEGER {  -- Type of session
 
 	-- 101-255 reserved for private use 
 
-	} (0..255)
+	} (0..3)
 
 
 
@@ -2668,7 +2669,7 @@ ExemptedVehicleClasses ::= INTEGER {
 
 	-- 101-255 reserved for private use 
 
-	} (0..255)
+	} (1..9)
 
  
 
@@ -2688,7 +2689,7 @@ TimeInterval ::= INTEGER {
 
 	-- 101-255 reserved for private use 
 
-	} (0..255)
+	} (1..4)
 
  
 
@@ -2758,7 +2759,7 @@ ActionCode ::= INTEGER {
 
 	-- 101-255 reserved for future private use
 
-	} (0..255)
+	} (0..4)
 
  
 
@@ -2812,7 +2813,7 @@ RecordType ::= 			INTEGER {
 
 	-- 101-255 reserved for private use 
 
-	} (0..255)
+	} (1..6)
 
  
 
@@ -2920,7 +2921,7 @@ CertificateType ::= INTEGER {
 
     -- 101-255 reserved for private use
 
-    } (0..255)
+    } (0..10)
 
 PublicKeyObject ::= SEQUENCE {
 
@@ -2952,7 +2953,7 @@ PublicKeyType ::= INTEGER {
 
     -- 101-255 reserved for private use
 
-    } (0..255)
+    } (0..3)
 
 
 
@@ -3040,7 +3041,7 @@ ReferenceType ::= INTEGER {
 
     -- 101-255 reserved for private use
 
-} (0..255)
+} (0..2)
 
 
 
@@ -3217,6 +3218,5 @@ Int2 ::= INTEGER (0..32767)
 
 
 END
-
 
 
