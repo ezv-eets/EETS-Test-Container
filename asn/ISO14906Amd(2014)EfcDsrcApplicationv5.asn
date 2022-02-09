@@ -192,7 +192,7 @@ vehicleShape49 (49),
 vehicleShape50 (50)
 -- (1..50) are reserved for future CEN use
 -- (51..255) are reserved for private use
-} (0..255)
+} (0..50)
 DieselEmissionValues::= SEQUENCE {
 particulate SEQUENCE {
 unitType UnitType,
@@ -254,8 +254,52 @@ lPG (5),
 battery (6),
 solar (7),
 hybrid (8),
-hydrogen (9)
--- (10-255) are reserved for future CEN use
+hydrogen (9),
+multi-fuel (10), -- multi fuel engine
+bivalent-petrol-lpg (11), -- bivalent operating engine with petrol or liquefied petroleum gas
+bivalent-petrol-cng (12), -- bivalent operating engine with petrol or compressed natural gas
+combined-petrol-electric (13), -- combined operation with petrol and electric engine
+cng (14), -- compressed natural gas
+lng (15), -- liquefied natural gas
+combined-diesel-electric (16), -- combined operation of diesel and electric engine
+combined-hydrogen-electric (17), -- combined operation of hydrogen and electric engine
+bivalent-hydrogen-petrol (18), -- bivalent operating engine with hydrogen or petrol
+bivalent-hydrogen-petrol-electric-engine (19), -- bivalent operating engine with hydrogen or petrol combined with electric engine
+fuel-cell-hydrogen (20), -- fuel cell with hydrogen as primary energy source and electric engine
+fuel-cell-petrol (21), -- fuel cell with petrol as primary energy source and electric engine
+fuel-cell-methanol (22), -- fuel cell with methanol as primary energy source and electric engine
+fuel-cell-ethanol (23), -- fuel cell with ethanol as primary energy source and electric engine
+fuel-cell-diesel (24), -- fuel cell with diesel as primary energy source and electric engine
+combined-multi-fuel-electric-engine (25), -- combined operation of multi fuel and electric engine
+combined-cng-electric-engine (26), -- combined operation with compressed natural gas and electric engine
+combined-lng-electric-engine (27), -- combined operation with liquefied natural gas and electric engine
+petrol-ethanol (28), -- fuel mix of petrol and mainly ethanol, e.g. E85
+combined-lpg-electric-engine (29), -- combined operation of LPG and electric engine
+hybrid-petrol-external-battery (30), -- hybrid drive with petrol and external rechargeable battery (plug-in hybrid)
+hybrid-diesel-external-battery (31), -- hybrid drive with diesel and external rechargeable battery (plug-in hybrid)
+hybrid-lpg-external-battery (32), -- hybrid drive with LPG and external rechargeable battery (plug-in hybrid)
+hybrid-hydrogen-external-battery (33), -- hybrid drive with hydrogen and external rechargeable battery (plug-in hybrid)
+hybrid-multi-fuel-external-battery (34), -- hybrid drive with multi fuel and external rechargeable battery (plug-in hybrid)
+hybrid-cng-external-battery (35), -- hybrid drive with compressed natural gas and external rechargeable battery (plug-in hybrid)
+hybrid-lng-external-battery (36), -- hybrid drive with liquefied natural gas and external rechargeable battery (plug-in hybrid)
+hybrid-bivalent-hydrogen-petrol-external-battery (37), -- hybrid drive with bivalent operating hydrogen and petrol engine and external rechargeable battery (plug-in hybrid)
+hydrogen-cng (38), -- fuel mix of hydrogen and compressed natural gas
+hydrogen-lng (39), -- fuel mix of hydrogen and liquefied natural gas
+hybrid-hydrogen-cng-external-battery (40), -- hybrid drive with hydrogen and compressed natural gas and external chargable battery (plug-in hybrid)
+hybrid-hydrogen-lng-external-battery (41), -- hybrid drive with hydrogen and liquefied natural gas and external chargable battery (plug-in hybrid)
+ethanol (42), -- ethanol or fuel mix of ethanol and other fuel (except petrol) or additives, e.g. E95
+hybrid-fuel-cell-hydrogen (43), -- hybrid drive with fuel cell (electric engine) and hydrogen (combustion engine)
+hybrid-fuel-cell-hydrogen-external-battery (44), -- hybrid drive with fuel cell (electric engine) and hydrogen (combustion engine) and external chargable battery (plug-in hybrid)
+dual-fuel-lng-diesel (45), -- dual operation with LNG and diesel
+electric-external (46), -- electric engine with external power supply
+biogas (47), -- mixture of different gases produced by the breakdown of organic matter
+bioDiesel (48), -- vegetable oil- or animal fat-based diesel fuel
+bioPetrol (49), -- petrol fully or partly based on vegetable sources
+bivalent-petrol-biogas (50), -- bivalent operating engine with petrol or biogas
+combined-biogas-electric-engine (51), -- combined operation of biogas and electric engine
+dual-fuel-cng-diesel (52), -- dual operation with CNG and diesel
+-- (53-254) are reserved for future CNE and ISO use
+other (255)
 } (0..255)
 Engine ::= SEQUENCE{
 engineCapacity Int2,
@@ -274,7 +318,7 @@ FutureCharacteristics ::= INTEGER {
 noEntry (0),
 airSuspension (1)
 -- (2..255) are reserved for future CEN use
-} (0..255)
+} (0..1)
 ICC-Id ::= OCTET STRING
 Int1 ::= INTEGER(0..255)
 Int2 ::= INTEGER(0..65535)
@@ -507,7 +551,7 @@ expiredPaymentMeans (24),
 -- PaymentMeans expired
 paymentMeansRestrictionsNotFulfilled (25)
 -- (26-255) are reserved for future CEN use
-} (0..255)
+} (0..25)
 SessionClass ::= SEQUENCE {
 sessionTariffClass Int1,
 sessionClaimedClass Int1
@@ -563,7 +607,7 @@ notPresent (0), -- trailer not attached or only one trailer attached, see
 trailer (1), -- also known as pull-bar trailer
 semitrailer (2) -- also known as articulate trailer
 -- (3..31) reserved for future CEN/ISO use
-} (0..31),
+} (0..2),
 trailerAxles TrailerAxles
 }
 TrailerLicencePlateNumber ::= LPN
