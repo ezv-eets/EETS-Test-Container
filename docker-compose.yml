@@ -37,7 +37,7 @@ services:
       - "POSTGRES_PASSWORD=secret"
       - "POSTGRES_DB=db-testsupport"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ["CMD-SHELL", "pg_isready -U eets"]
       interval: 10s
       timeout: 5s
       retries: 5
