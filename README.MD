@@ -81,7 +81,7 @@ eets-testcontainer-testsupportservice: //service-name
  
  Restart the container and you will reach the test-support-service under:
  * 0.0.0.0:8099
- 
+
  
 ### OpenAPI definition
 The OpenAPI definition of the test-support-service's REST interface can be found at `docs/openapi.yml`
