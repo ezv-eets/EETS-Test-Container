@@ -2,8 +2,8 @@ name: Docker
 
 on:
   push:
-  schedule:
-    - cron: '0 5 * * *'
+  registry_package:
+    types: [published]
 
 jobs:
   test:
