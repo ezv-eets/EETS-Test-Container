@@ -70,6 +70,8 @@ services:
       - "eets-testcontainer-postgres"
       - "eets-testcontainer-messagebroker"
       - "eets-testcontainer-minio"
+    environment:
+      SPRING_PROFILES_ACTIVE: "testsupport"
   eets-testcontainer-provider-interface-service:
     image: ghcr.io/ezv-eets/eets-test-container/eets-provider-interface-service
     container_name: eets-provider-interface-service
