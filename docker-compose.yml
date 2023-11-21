@@ -52,7 +52,7 @@ services:
       - SCHEMA_REGISTRY_KAFKA_BROKERS=PLAINTEXT://kafka:9092
 
   eets-testcontainer-postgres:
-    image: bitnami/postgresql:11.13.0
+    image: bitnami/postgresql:15.1.0
     container_name: eets-testcontainer-postgres
     ports:
       - "5432:5432"
