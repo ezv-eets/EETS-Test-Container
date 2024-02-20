@@ -2436,15 +2436,12 @@ ExceptionListType ::= 	INTEGER {
 
 	blackList				(1), --List of users for which TSP disclaims responsibility.
 
-	whiteList				(2), --List of users for which TSP accepts responsibility.
+	whiteList				(2) --List of users for which TSP accepts responsibility.
 
 	-- 9-100 reserved for future CEN and ISO use 
 
 	-- 101-255 reserved for private use
-
-	ex-demoExceptionList    (101)
-
-	} (0..2 | 101)
+	} (0..2)
 
 
 
