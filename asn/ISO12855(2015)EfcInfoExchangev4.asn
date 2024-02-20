@@ -1627,6 +1627,12 @@ AduReasonCode ::= INTEGER {
 
 	exL-EntryRetoactivelyBlackListed           (10303), -- the entryValidityStart date of a first time submitted entry is older than allowed
 
+	exL-futureExeptionListEntry                (10311), -- one or more ExceptionListEntry have a date/time in the future compared with exceptionValidityStart (see date/time in entryValidityStart).
+
+	exL-exeptionListWithWrongActivationTime    (10313), -- the time in exceptionValidityStart is not one of the 4 al-lowed activation times.
+
+	exL-expiredActivationDateAndTime           (10314), -- The latest transmission date and time has expired 
+
 	-- 11000-11099 BillingDetailsADU specific error codes
 
 	bilD-unknownDeclarationId                  (11001),  -- Reference to one or more declarations (TollDeclara-tionADU) are not known. Only allowed if one or more declarationId is referenced in BillingDetailsADU
@@ -1643,10 +1649,9 @@ AduReasonCode ::= INTEGER {
 
 	paC-wrongPaymentClaimAmount					(11101), -- The paymentClaimAmont is not the result of the sum from the billingDetailsList amounts.
 
-	paC-unknownBillingDetails					(11102)	 -- One or more referenced billing details are unknown.		
+	paC-unknownBillingDetails					(11102)	 -- One or more referenced billing details are unknown.	
 
-
-	} ( 0..1 | 100..101 | 200..206 | 400..405 | 500..502 | 700..715 | 800..809 | 1200..1203 | 3000 | 3010 | 4000 | 10101..10108 | 10201..10203 | 10301..10303 | 11001..11102 )
+	} ( 0..1 | 100..101 | 200..206 | 400..405 | 500..502 | 700..715 | 800..809 | 1200..1203 | 3000 | 3010 | 4000 | 10101..10108 | 10201..10203 | 10301..10303 | 10311 | 10313..10314 | 11001..11102 )
 
 
 
@@ -2427,11 +2432,19 @@ QualityParameterStatus ::= 			INTEGER {
 
 
 
-ExceptionListType ::= 	INTEGER {
+ExceptionListType ::= 	INTEGER { 
 
-	blackList				(1)  --List of users for which TSP disclaims responsibility.
+	blackList				(1), --List of users for which TSP disclaims responsibility.
 
-	} (1)
+	whiteList				(2), --List of users for which TSP accepts responsibility.
+
+	-- 9-100 reserved for future CEN and ISO use 
+
+	-- 101-255 reserved for private use
+
+	ex-demoExceptionList    (101)
+
+	} (0..2 | 101)
 
 
 
@@ -2463,13 +2476,13 @@ ExceptionListStatusType ::= 	INTEGER {
 
    -- limitations resulting by putting a service user in the exception list
 
-	allApplications				(0),
+	allApplications						(0),
 
-	locallyBlocked				(1),
+	locallyBlocked						(1),
 
 	blockedForSchemesRequiringOdometer	(2),
 
-	noLimits				(3)
+	noLimits							(3)
 
 
 
@@ -2485,27 +2498,29 @@ ExceptionListReasonType ::= 	INTEGER {
 
 	-- The reason code indicates why a user has been put on the exception list
 
-	notToBeDisclosed			(0),
+	notToBeDisclosed					(0),
 
-	obeDeactivated				(1),
+	obeDeactivated						(1),
 
-	obeIsStolen				(2),
+	obeIsStolen							(2),
 
-	temporaryTechnicalProblem		(3),
+	temporaryTechnicalProblem			(3),
 
 	suspicionOnTechnicalManipulation	(4),
 
-	latePayment				(5), -- commercial conditions
+	latePayment							(5), -- commercial conditions
 
-	noPayment				(6), -- commercial conditions
+	noPayment							(6), -- commercial conditions
 
-	contractHolderInsolvent			(7),
+	contractHolderInsolvent				(7),
 
-	obeNotValid				(13),
+	whiteListedUser						(8),  -- to support whitelists 
 
-	obeIsLost				(14)
+	obeNotValid							(13),
 
-	} (0..7 | 13..14)
+	obeIsLost							(14)
+
+	} (0..8 | 13..14)
 
 
 
@@ -2513,9 +2528,11 @@ ExceptionListActionType ::= INTEGER {
 
 	rejectOBE		(1),
 
-	invalidateOBE	(2) --set blacklist bit, if supported by TC
+	invalidateOBE	(2), --set blacklist bit, if supported by TC
 
-	} (1..2)
+	acceptOBE 		(3)
+
+	} (1..3)
 
 
 
@@ -2523,7 +2540,7 @@ AbnormalOBEReasonCode ::= 	INTEGER {
 
 	reasonNotToBeDisclosed		(0), 
 
-	obeIsDefect			(1), 
+	obeIsDefect					(1), 
 
 	obeIsNotWorkingProperly		(2), 
 
@@ -3218,5 +3235,6 @@ Int2 ::= INTEGER (0..32767)
 
 
 END
+
 
 
