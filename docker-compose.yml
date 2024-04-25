@@ -113,5 +113,6 @@ services:
       - "eets-testcontainer-testsupportservice"
     environment:
       - KAFKA_SECURITY_PROTOCOL=PLAINTEXT
+      - SPRING_PROFILES_ACTIVE=testsupport,testcontainer
       - KAFKA_URL=http://kafka:9092
       - SCHEMA_REGISTRY_URL=http://eets-testcontainer-schema-registry:8081
