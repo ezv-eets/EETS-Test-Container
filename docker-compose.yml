@@ -1,4 +1,3 @@
-version: "3.7"
 volumes:
   db-data:
   testsupport-data:
@@ -22,67 +21,94 @@ services:
 
   eets-testcontainer-zookeeper:
     container_name: eets-testcontainer-zookeeper
-    image: bitnami/zookeeper:3.8
+    image: zookeeper:3.8
+    ports:
+      - "2181:2181"
     volumes:
-      - "zookeeper-data:/bitnami/zookeeper"
-    environment:
-      - ALLOW_ANONYMOUS_LOGIN=yes
+      - "zookeeper-data:/data"
 
   kafka:
-    image: bitnami/kafka:3.3.1
+    image: confluentinc/cp-kafka:7.3.0
     container_name: kafka
+    hostname: kafka
     ports:
       - "9092:9092"
     volumes:
-      - "kafka-data:/bitnami/kafka"
+      - "kafka-data:/var/lib/kafka/data"
     environment:
-      - KAFKA_CFG_ZOOKEEPER_CONNECT=eets-testcontainer-zookeeper:2181
-      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=PLAINTEXT:PLAINTEXT,
-      - ALLOW_PLAINTEXT_LISTENER=yes
+      KAFKA_ZOOKEEPER_CONNECT: eets-testcontainer-zookeeper:2181
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
       - eets-testcontainer-zookeeper
 
   eets-testcontainer-schema-registry:
     container_name: eets-testcontainer-schema-registry
-    image: bitnami/schema-registry:7.2
+    image: confluentinc/cp-schema-registry:7.2.0
+    ports:
+      - '8081:8081'
     depends_on:
       - kafka
     environment:
-      - SCHEMA_REGISTRY_LISTENERS=http://0.0.0.0:8081
-      - SCHEMA_REGISTRY_KAFKA_BROKERS=PLAINTEXT://kafka:9092
+      SCHEMA_REGISTRY_HOST_NAME: eets-testcontainer-schema-registry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
 
   eets-testcontainer-postgres:
-    image: bitnami/postgresql:15.1.0
+    image: postgres:15.1
     container_name: eets-testcontainer-postgres
     ports:
       - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
     environment:
       - "POSTGRES_USER=eets"
       - "POSTGRES_PASSWORD=secret"
       - "POSTGRES_DB=db-testsupport"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U eets"]
+      test: ["CMD", "pg_isready", "-U", "eets", "-d", "db-testsupport"]
       interval: 10s
       timeout: 5s
       retries: 5
-
   eets-testcontainer-minio:
     image: minio/minio
     volumes:
-      - minio-data:/export
+      - minio-data:/data
     container_name: eets-testcontainer-minio
     command:
       - server
       - --address=0.0.0.0:9000
       - --console-address=0.0.0.0:9001
-      - /export
+      - /data
     ports:
       - "9000:9000"
       - "9001:9001"
     environment:
       MINIO_ROOT_USER: "admin"
       MINIO_ROOT_PASSWORD: "secretsecret"
-      MINIO_DEFAULT_BUCKETS: "bazg-camiuns-eets-pis-tc"
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mc:
+    image: minio/mc
+    container_name: mc-bucket-creator-eets
+    depends_on:
+      eets-testcontainer-minio:
+        condition: service_healthy
+    environment:
+      MINIO_ROOT_USER: "admin"
+      MINIO_ROOT_PASSWORD: "secretsecret"
+    entrypoint: >
+      /bin/sh -c "
+      /usr/bin/mc alias set myminio http://eets-testcontainer-minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
+      /usr/bin/mc mb myminio/bazg-camiuns-eets-pis-tc || true;
+      exit 0;
+      "
 
   eets-testcontainer-testsupportservice:
     image: ghcr.io/ezv-eets/eets-test-container/eets-test-support-service
@@ -93,26 +119,32 @@ services:
       - ./cert/provider-signing-cert:/var/eets/test/service-conf/cert/provider-signing-cert
       - ./provider.properties:/var/eets/test/service-conf/provider.properties
     depends_on:
-      - "eets-testcontainer-postgres"
-      - "kafka"
-      - "eets-testcontainer-schema-registry"
-      - "eets-testcontainer-minio"
+      eets-testcontainer-postgres:
+        condition: service_healthy
+      kafka:
+        condition: service_started
+      eets-testcontainer-schema-registry:
+        condition: service_started
+      mc:
+        condition: service_completed_successfully
     environment:
       - SPRING_PROFILES_ACTIVE=testsupport
       - KAFKA_SECURITY_PROTOCOL=PLAINTEXT
-      - KAFKA_URL=http://kafka:9092
+      - KAFKA_URL=kafka:9092
       - SCHEMA_REGISTRY_URL=http://eets-testcontainer-schema-registry:8081
 
   eets-testcontainer-provider-interface-service:
-    image:  ghcr.io/ezv-eets/eets-test-container/eets-provider-interface-service
+    image: ghcr.io/ezv-eets/eets-test-container/eets-provider-interface-service
     container_name: eets-provider-interface-service
     ports:
       - "8089:8089"
     depends_on:
-      - "eets-testcontainer-minio"
-      - "eets-testcontainer-testsupportservice"
+      mc:
+        condition: service_completed_successfully
+      eets-testcontainer-testsupportservice:
+        condition: service_started
     environment:
       - KAFKA_SECURITY_PROTOCOL=PLAINTEXT
       - SPRING_PROFILES_ACTIVE=testsupport,testcontainer
-      - KAFKA_URL=http://kafka:9092
+      - KAFKA_URL=kafka:9092
       - SCHEMA_REGISTRY_URL=http://eets-testcontainer-schema-registry:8081
