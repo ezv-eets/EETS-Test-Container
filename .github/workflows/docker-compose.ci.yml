@@ -1,0 +1,4 @@
+services:
+  eets-testcontainer-zookeeper:
+    environment:
+      KAFKA_HEAP_OPTS: "-Xmx256M -Xms128M"
