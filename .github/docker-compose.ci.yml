@@ -5,3 +5,6 @@ services:
   kafka:
     environment:
       KAFKA_HEAP_OPTS: "-Xmx512M -Xms256M -XX:-UseContainerSupport"
+  eets-testcontainer-schema-registry:
+    environment:
+      SCHEMA_REGISTRY_HEAP_OPTS: "-Xmx256M -Xms128M -XX:-UseContainerSupport"
