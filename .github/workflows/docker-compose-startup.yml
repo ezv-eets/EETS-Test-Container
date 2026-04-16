@@ -14,6 +14,10 @@ jobs:
 
       - name: Run tests
         run: |
-            docker compose --file docker-compose.yml build --no-cache
-            docker compose --file docker-compose.yml --file .integration-test/docker-compose.test.yml run testcontainer-verification-tss
-            docker compose --file docker-compose.yml --file .integration-test/docker-compose.test.yml run testcontainer-verification-pis
+            docker compose --file docker-compose.yml --file .github/docker-compose.ci.yml build --no-cache
+            docker compose --file docker-compose.yml --file .github/docker-compose.ci.yml --file .integration-test/docker-compose.test.yml run testcontainer-verification-tss
+            docker compose --file docker-compose.yml --file .github/docker-compose.ci.yml --file .integration-test/docker-compose.test.yml run testcontainer-verification-pis
+
+      - name: Dump container logs on failure
+        if: failure()
+        run: docker compose --file docker-compose.yml logs --no-color
