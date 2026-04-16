@@ -21,11 +21,20 @@ services:
 
   eets-testcontainer-zookeeper:
     container_name: eets-testcontainer-zookeeper
-    image: zookeeper:3.8
+    image: confluentinc/cp-zookeeper:7.3.0
     ports:
       - "2181:2181"
     volumes:
-      - "zookeeper-data:/data"
+      - "zookeeper-data:/var/lib/zookeeper/data"
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+      KAFKA_OPTS: "-Dzookeeper.4lw.commands.whitelist=ruok"
+    healthcheck:
+      test: [ "CMD-SHELL", "echo ruok | nc -w 2 localhost 2181 | grep imok || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   kafka:
     image: confluentinc/cp-kafka:7.3.0
@@ -42,19 +51,31 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0
     depends_on:
-      - eets-testcontainer-zookeeper
+      eets-testcontainer-zookeeper:
+        condition: service_healthy
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "9092" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   eets-testcontainer-schema-registry:
     container_name: eets-testcontainer-schema-registry
-    image: confluentinc/cp-schema-registry:7.2.0
+    image: confluentinc/cp-schema-registry:7.3.0
     ports:
       - '8081:8081'
     depends_on:
-      - kafka
+      kafka:
+        condition: service_healthy
     environment:
       SCHEMA_REGISTRY_HOST_NAME: eets-testcontainer-schema-registry
       SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8081
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://kafka:9092
+    healthcheck:
+      test: [ "CMD", "nc", "-z", "localhost", "8081" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   eets-testcontainer-postgres:
     image: postgres:15.1
@@ -105,8 +126,9 @@ services:
       MINIO_ROOT_PASSWORD: "secretsecret"
     entrypoint: >
       /bin/sh -c "
-      /usr/bin/mc alias set myminio http://eets-testcontainer-minio:9000 ${MINIO_ROOT_USER} ${MINIO_ROOT_PASSWORD};
-      /usr/bin/mc mb myminio/bazg-camiuns-eets-pis-tc || true;
+      /usr/bin/mc alias set myminio http://eets-testcontainer-minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD;
+      /usr/bin/mc mb --with-lock myminio/bazg-camiuns-eets-pis-tc || true;
+      /usr/bin/mc version enable myminio/bazg-camiuns-eets-pis-tc || true;
       exit 0;
       "
 
@@ -122,9 +144,9 @@ services:
       eets-testcontainer-postgres:
         condition: service_healthy
       kafka:
-        condition: service_started
+        condition: service_healthy
       eets-testcontainer-schema-registry:
-        condition: service_started
+        condition: service_healthy
       mc:
         condition: service_completed_successfully
     environment:
