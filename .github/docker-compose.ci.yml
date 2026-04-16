@@ -2,3 +2,6 @@ services:
   eets-testcontainer-zookeeper:
     environment:
       KAFKA_HEAP_OPTS: "-Xmx256M -Xms128M -XX:-UseContainerSupport"
+  kafka:
+    environment:
+      KAFKA_HEAP_OPTS: "-Xmx512M -Xms256M -XX:-UseContainerSupport"
