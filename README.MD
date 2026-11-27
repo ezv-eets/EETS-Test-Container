@@ -61,6 +61,8 @@ By default our services bind to the following ports of the host system:
 * 0.0.0.0:443 -->   The FCA's interface to the eets-providers
 * 0.0.0.0:5432 --> The database of our services
 * 0.0.0.0:8096 --> The Test-Support-Service that allows you to prepare, execute and assess the defined test-cases.
+* 0.0.0.0:9000 --> The RustFS S3 API
+* 0.0.0.0:9002 --> The RustFS web console
 
 If you want to change these bindings you need to adjust the `docker-compose.yml` file. For each service that publishes ports there is a configuration-section like this:
 ```    
