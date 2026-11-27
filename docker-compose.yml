@@ -4,7 +4,7 @@ volumes:
   zookeeper-data:
   kafka-data:
   nginx-configuration-data:
-  minio-data:
+  rustfs-data:
 
 services:
   eets-testcontainer-proxy:
@@ -93,44 +93,59 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-  eets-testcontainer-minio:
-    image: minio/minio:RELEASE.2025-09-07T16-13-09Z
+
+  eets-testcontainer-rustfs:
+    image: rustfs/rustfs:1.0.6
     volumes:
-      - minio-data:/data
-    container_name: eets-testcontainer-minio
-    command:
-      - server
-      - --address=0.0.0.0:9000
-      - --console-address=0.0.0.0:9001
-      - /data
+      - rustfs-data:/data
+    container_name: eets-testcontainer-rustfs
+    command: /data
     ports:
       - "9000:9000"
-      - "9001:9001"
+      - "9002:9001"
+    networks:
+      default:
+        aliases:
+          - rustfs
     environment:
-      MINIO_ROOT_USER: "admin"
-      MINIO_ROOT_PASSWORD: "secretsecret"
+      RUSTFS_ACCESS_KEY: "admin"
+      RUSTFS_SECRET_KEY: "secretsecret"
+      RUSTFS_ADDRESS: ":9000"
+      RUSTFS_CONSOLE_ADDRESS: ":9001"
+      RUSTFS_CONSOLE_ENABLE: "true"
     healthcheck:
-      test: ["CMD-SHELL", "curl -f http://localhost:9000/minio/health/live"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/health"]
       interval: 5s
       timeout: 5s
       retries: 5
 
-  mc:
-    image: minio/mc
-    container_name: mc-bucket-creator-eets
+  eets-testcontainer-init-rustfs:
+    image: amazon/aws-cli
+    container_name: eets-testcontainer-init-rustfs
     depends_on:
-      eets-testcontainer-minio:
+      eets-testcontainer-rustfs:
         condition: service_healthy
     environment:
-      MINIO_ROOT_USER: "admin"
-      MINIO_ROOT_PASSWORD: "secretsecret"
-    entrypoint: >
-      /bin/sh -c "
-      /usr/bin/mc alias set myminio http://eets-testcontainer-minio:9000 $$MINIO_ROOT_USER $$MINIO_ROOT_PASSWORD;
-      /usr/bin/mc mb --with-lock myminio/bazg-camiuns-eets-pis-tc || true;
-      /usr/bin/mc version enable myminio/bazg-camiuns-eets-pis-tc || true;
-      exit 0;
-      "
+      AWS_ACCESS_KEY_ID: "admin"
+      AWS_SECRET_ACCESS_KEY: "secretsecret"
+    entrypoint: ["/bin/sh", "-ec"]
+    command:
+      - |
+        endpoint=http://eets-testcontainer-rustfs:9000
+        bucket=bazg-camiuns-eets-pis-tc
+        exists=$$(aws --endpoint-url "$$endpoint" s3api list-buckets --query "contains(Buckets[].Name, '$$bucket')" --output text)
+        if [ "$$exists" = "False" ]; then
+          aws --endpoint-url "$$endpoint" s3api create-bucket --bucket "$$bucket" --object-lock-enabled-for-bucket
+        elif [ "$$exists" != "True" ]; then
+          echo "Unexpected bucket lookup result: $$exists" >&2
+          exit 1
+        fi
+        aws --endpoint-url "$$endpoint" s3api put-bucket-versioning --bucket "$$bucket" --versioning-configuration Status=Enabled
+        lock=$$(aws --endpoint-url "$$endpoint" s3api get-object-lock-configuration --bucket "$$bucket" --query ObjectLockConfiguration.ObjectLockEnabled --output text)
+        if [ "$$lock" != "Enabled" ]; then
+          echo "Object Lock is not enabled for $$bucket" >&2
+          exit 1
+        fi
 
   eets-testcontainer-testsupportservice:
     image: ghcr.io/ezv-eets/eets-test-container/eets-test-support-service
@@ -147,7 +162,7 @@ services:
         condition: service_healthy
       eets-testcontainer-schema-registry:
         condition: service_healthy
-      mc:
+      eets-testcontainer-init-rustfs:
         condition: service_completed_successfully
     environment:
       - SPRING_PROFILES_ACTIVE=testsupport
@@ -161,7 +176,7 @@ services:
     ports:
       - "8089:8089"
     depends_on:
-      mc:
+      eets-testcontainer-init-rustfs:
         condition: service_completed_successfully
       eets-testcontainer-testsupportservice:
         condition: service_started
